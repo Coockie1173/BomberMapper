@@ -9,7 +9,7 @@
 
 struct Button** UIButtons;
 
-void PrintMa()
+void OpenLayerFile()
 {
     nfdu8char_t *outPath;
     nfdu8filteritem_t filters[1] = { { "Binary file", "bin" } };
@@ -29,7 +29,7 @@ void ConstructFileUI()
 {
     UIButtons = malloc(sizeof(struct Button*) * BUTTONCOUNT);
 
-    UIButtons[0] = MakeButton("./Resources/Open.bmp", (vec2){0,0}, PrintMa);
+    UIButtons[0] = MakeButton("./Resources/Open.bmp", (vec2){0,0}, OpenLayerFile);
     /*UIButtons[1] = MakeButton("./Resources/Open.bmp", (vec2){0,0}, NULL);
     UIButtons[2] = MakeButton("./Resources/Open.bmp", (vec2){0,0}, NULL);
     UIButtons[3] = MakeButton("./Resources/Open.bmp", (vec2){0,0}, NULL);
@@ -43,6 +43,9 @@ void ConstructFileUI()
 
 void RenderFileUI()
 {
+    glDisable(GL_BLEND); 
+    glDisable(GL_DEPTH_TEST);
+
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
     glOrtho(0.0f, WIDTH / 2, HEIGHT / 2, 0.0f, -1.0f, 1.0f);  // 2D Orthographic projection
@@ -52,10 +55,10 @@ void RenderFileUI()
 
     glColor4f(0.0f, 0.0f, 0.0f, 1.0f);
     glBegin(GL_QUADS);
-        glVertex3f(0.0f, 0.0f, -5.0f); 
-        glVertex3f(WIDTH, 0.0f, -5.0f); 
-        glVertex3f(WIDTH, HEIGHT, -5.0f);  
-        glVertex3f(0.0f, HEIGHT, -5.0f); 
+        glVertex2f(0.0f, 0.0f); 
+        glVertex2f(WIDTH, 0.0f); 
+        glVertex2f(WIDTH, HEIGHT);  
+        glVertex2f(0.0f, HEIGHT); 
     glEnd();
 
     float PosX = 0, PosY = 0;
@@ -71,6 +74,10 @@ void RenderFileUI()
         }
         RenderButton(UIButtons[i]);
     }
+
+    glEnable(GL_DEPTH_TEST);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
 
 void DestroyFileUI()
