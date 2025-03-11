@@ -6,7 +6,7 @@
                 "${workspaceFolder}/**",
                 "${workspaceFolder}/build/_deps/cglm-src/include",
                 "${workspaceFolder}/build/_deps/glfw-src/include",
-                "${workspaceFolder}/build/_deps/glad-src/include",
+                "${workspaceFolder}/build/_deps/nfde-src/src/include",
                 "${workspaceFolder}/include"
             ],
             "defines": [],

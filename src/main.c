@@ -2,7 +2,9 @@
 #include <GLFW/glfw3.h>
 #include <stdio.h>   
 #include <stdlib.h> 
+#include <nfd.h>
 
+#include "UI/UI.h"
 #include "UI/FileUI.h" 
 
 #include "structs.h"
@@ -19,6 +21,8 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 Camera camera;
 
 int main() {
+    NFD_Init();
+
     // Initialize GLFW
     if (!glfwInit()) {
         printf("Failed to initialize GLFW\n");
@@ -38,6 +42,7 @@ int main() {
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
     glfwSetCursorPosCallback(window, mouse_callback);
     glfwSetWindowSizeLimits(window, 800, 600, GLFW_DONT_CARE, GLFW_DONT_CARE);
+    glfwSetMouseButtonCallback(window, mouse_button_callback);
 
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
         fprintf(stderr, "Failed to initialize GLAD\n");

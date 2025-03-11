@@ -58,3 +58,19 @@ void DeleteButton(struct Button* But)
 
     free(But);
 }
+
+void CheckClick(struct Button* But, float X, float Y)
+{
+    if(But->OnClick == NULL)
+    {
+        return;
+    }
+    //this assumes you've corrected for the quadrant
+    if(But->Position[0] < X && But->Position[0] + But->Size[0] > X)
+    {
+        if(But->Position[1] < Y && But->Position[1] + But->Size[1] > Y)
+        {
+            But->OnClick();
+        }
+    }
+}

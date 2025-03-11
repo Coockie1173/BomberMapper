@@ -46,6 +46,14 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(cglm)
 
+FetchContent_Declare(
+    NFDE
+    GIT_REPOSITORY https://github.com/btzy/nativefiledialog-extended.git
+    GIT_TAG master # Use latest stable version
+    GIT_PROGRESS TRUE
+)
+FetchContent_MakeAvailable(NFDE)
+
 # Add all source files from src directory
 file(GLOB_RECURSE SRC_FILES src/*.c)
 
@@ -57,6 +65,7 @@ add_executable(${PROJECT_NAME} ${SRC_FILES} ${GLAD_SRC})
 # Include dependencies
 target_include_directories(${PROJECT_NAME} PRIVATE 
     ${cglm_SOURCE_DIR}/include
+    ${NFDE_SOURCE_DIR}/src/include
     ${PROJECT_SOURCE_DIR}/include  # Include GLAD headers
 )
 
@@ -68,6 +77,7 @@ target_link_libraries(${PROJECT_NAME}
     glfw
     OpenGL::GL
     OpenGL::GLU
+    nfd
 )
 
 # Copy Resources folder after build

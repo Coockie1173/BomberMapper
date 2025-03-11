@@ -4,16 +4,33 @@
 #include <GL/gl.h>
 #include "../camera.h"
 #include "FileUI.h"
-#define BUTTONCOUNT 10
+#include <nfd.h>
+#define BUTTONCOUNT 1
 
 struct Button** UIButtons;
+
+void PrintMa()
+{
+    nfdu8char_t *outPath;
+    nfdu8filteritem_t filters[1] = { { "Binary file", "bin" } };
+    nfdopendialogu8args_t args = {0};
+    args.filterList = filters;
+    args.filterCount = 1;
+
+    nfdresult_t result = NFD_OpenDialogU8_With(&outPath, &args);
+    if (result == NFD_OKAY)
+    {
+
+        NFD_FreePathU8(outPath);
+    }
+}
 
 void ConstructFileUI()
 {
     UIButtons = malloc(sizeof(struct Button*) * BUTTONCOUNT);
 
-    UIButtons[0] = MakeButton("./Resources/Open.bmp", (vec2){0,0}, NULL);
-    UIButtons[1] = MakeButton("./Resources/Open.bmp", (vec2){0,0}, NULL);
+    UIButtons[0] = MakeButton("./Resources/Open.bmp", (vec2){0,0}, PrintMa);
+    /*UIButtons[1] = MakeButton("./Resources/Open.bmp", (vec2){0,0}, NULL);
     UIButtons[2] = MakeButton("./Resources/Open.bmp", (vec2){0,0}, NULL);
     UIButtons[3] = MakeButton("./Resources/Open.bmp", (vec2){0,0}, NULL);
     UIButtons[4] = MakeButton("./Resources/Open.bmp", (vec2){0,0}, NULL);
@@ -21,7 +38,7 @@ void ConstructFileUI()
     UIButtons[6] = MakeButton("./Resources/Open.bmp", (vec2){0,0}, NULL);
     UIButtons[7] = MakeButton("./Resources/Open.bmp", (vec2){0,0}, NULL);
     UIButtons[8] = MakeButton("./Resources/Open.bmp", (vec2){0,0}, NULL);
-    UIButtons[9] = MakeButton("./Resources/Open.bmp", (vec2){0,0}, NULL);
+    UIButtons[9] = MakeButton("./Resources/Open.bmp", (vec2){0,0}, PrintMa);*/
 }
 
 void RenderFileUI()
@@ -64,4 +81,12 @@ void DestroyFileUI()
     }
 
     free(UIButtons);
+}
+
+void HandleClicks(float X, float Y)
+{
+    for(int i = 0; i < BUTTONCOUNT; i++)
+    {
+        CheckClick(UIButtons[i], X, Y);
+    }
 }

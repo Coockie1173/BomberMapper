@@ -8,4 +8,6 @@ void ConstructFileUI();
 void RenderFileUI();
 void DestroyFileUI();
 
+void HandleClicks(float X, float Y);
+
 #endif
