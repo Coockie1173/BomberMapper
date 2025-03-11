@@ -2,6 +2,7 @@
     "files.associations": {
         "drawing.h": "c",
         "camera.h": "c",
-        "glfw3.h": "c"
+        "glfw3.h": "c",
+        "structs.h": "c"
     }
 }
