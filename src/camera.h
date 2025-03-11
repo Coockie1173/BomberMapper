@@ -20,6 +20,9 @@ typedef struct {
     mat4 view, projection; 
 } Camera;
 
+extern int WIDTH;
+extern int HEIGHT;
+
 void camera_init(Camera *camera, vec3 position);
 void camera_process_input(Camera *camera, GLFWwindow *window, float deltaTime);
 void camera_process_mouse(Camera *camera, double xpos, double ypos);

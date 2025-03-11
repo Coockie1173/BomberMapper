@@ -13,10 +13,6 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 
 // Window dimensions
-const int WIDTH = 800;
-const int HEIGHT = 600;
-
-struct WorldSquare* TempTiles;
 
 Camera camera;
 
@@ -33,29 +29,6 @@ int main() {
         printf("Failed to create GLFW window\n");
         glfwTerminate();
         return -1;
-    }
-
-    TempTiles = malloc(sizeof(struct WorldSquare) * 64 * 64 * 64);
-
-    const int MapX = 4;
-    const int MapY = 4;
-    const int MapZ = 1;
-
-    for(int z = 0; z < MapZ; z++)
-    {
-        for(int y = 0; y < MapY; y++)
-        {
-            for(int x = 0; x < MapX; x++)
-            {
-                int idx = x + (y * MapX) + (z * MapY * MapX);
-                TempTiles[idx].Col = (struct Colour){(float)x / MapX, (float)y / MapY, 1};
-                TempTiles[idx].Layer = z * 1;
-                TempTiles[idx].PosX = x * 1;
-                TempTiles[idx].PosY = y * 1;
-                TempTiles[idx].Size = 1;
-                printf("Generating tile %d\n", idx);
-            }
-        }
     }
 
     // Make the OpenGL context current
@@ -80,30 +53,49 @@ int main() {
 
     // Main loop
     while (!glfwWindowShouldClose(window)) {
-        // Set background color and clear screen
-
         float currentFrame = (float)glfwGetTime();
         deltaTime = currentFrame - lastFrame;
         lastFrame = currentFrame;
 
         camera_process_input(&camera, window, deltaTime);
 
-        Render(window);
+        // Set the viewport for the top-left quadrant (x: 0, y: 0, width: WIDTH/2, height: HEIGHT/2)
+        glViewport(0, HEIGHT / 2, WIDTH / 2, HEIGHT / 2);
+        Render3DWorld(window);  // Render only in the top-left quadrant
+
+        // Optionally render other content in the other three quadrants
+        // Bottom-left quadrant
+        glViewport(0, 0, WIDTH / 2, HEIGHT / 2);
+        // Render other content if needed
+        
+        // Top-right quadrant
+        glViewport(WIDTH / 2, HEIGHT / 2, WIDTH / 2, HEIGHT / 2);
+        // Render other content if needed
+
+        // Bottom-right quadrant
+        glViewport(WIDTH / 2, 0, WIDTH / 2, HEIGHT / 2);
+        // Render other content if needed
+
+        DrawBorders();
+
+        // Swap buffers and poll events
+        glfwSwapBuffers(window);
+        glfwPollEvents();
     }
 
     // Cleanup
     glfwDestroyWindow(window);
     glfwTerminate();
 
-    free(TempTiles);
-
     return 0;
 }
 
-void Render(GLFWwindow *window)
+void Render3DWorld(GLFWwindow *window)
 {
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    glPushMatrix(); // Save the current matrix state
 
     // Create View and Projection Matrices
     glm_mat4_identity(camera.view);
@@ -135,8 +127,50 @@ void Render(GLFWwindow *window)
             }
         }
     }
+    
+    glPopMatrix(); // Save the current matrix state
+}
 
-    // Swap buffers and poll events
-    glfwSwapBuffers(window);
-    glfwPollEvents();
+void DrawBorders() {
+    // Switch to 2D orthogonal projection for border drawing
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    glOrtho(0.0f, WIDTH, HEIGHT, 0.0f, -1.0f, 1.0f);  // 2D Orthographic projection
+    glViewport(0, 0, WIDTH, HEIGHT);
+
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
+
+    glLineWidth(3.0f);  // Set the width of the lines for the borders
+    glColor3f(1.0f, 1.0f, 1.0f);  // Set border color (white)
+
+    // Draw borders around each quadrant
+    glBegin(GL_LINES);
+
+
+    // Bottom-left quadrant borders
+    glVertex2f(0.0f, HEIGHT / 2);
+    glVertex2f(WIDTH / 2, HEIGHT / 2);  // Bottom border
+    glVertex2f(WIDTH / 2, HEIGHT / 2);
+    glVertex2f(WIDTH / 2, 0.0f);  // Right border
+
+    // Bottom-right quadrant borders
+    glVertex2f(WIDTH / 2, HEIGHT / 2);
+    glVertex2f(WIDTH, HEIGHT / 2);  // Bottom border
+    glVertex2f(WIDTH, HEIGHT / 2);
+    glVertex2f(WIDTH, 0.0f);  // Right border
+
+    // Bottom-left quadrant borders
+    glVertex2f(0.0f, HEIGHT);
+    glVertex2f(WIDTH / 2, HEIGHT);  // Bottom border
+    glVertex2f(WIDTH / 2, HEIGHT);
+    glVertex2f(WIDTH / 2, 0.0f);  // Right border
+
+    // Bottom-right quadrant borders
+    glVertex2f(WIDTH / 2, HEIGHT);
+    glVertex2f(WIDTH, HEIGHT); // Bottom border
+    glVertex2f(WIDTH, HEIGHT);
+    glVertex2f(WIDTH, 0.0f);  // Right border
+
+    glEnd();
 }

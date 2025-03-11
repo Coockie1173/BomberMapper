@@ -4,6 +4,9 @@ static float lastX = 400, lastY = 300;
 static int firstMouse = 1;
 static Camera *activeCamera = NULL; // Track the active camera instance
 
+int WIDTH = 800;
+int HEIGHT = 600;
+
 void camera_init(Camera *camera, vec3 position) {
     glm_vec3_copy(position, camera->position);
     
@@ -94,6 +97,8 @@ void camera_update_vectors(Camera *camera) {
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
     glViewport(0, 0, width, height);
+    WIDTH = width;
+    HEIGHT = height;
 }
 
 void mouse_callback(GLFWwindow* window, double xpos, double ypos) {
