@@ -3,6 +3,16 @@
         "drawing.h": "c",
         "camera.h": "c",
         "glfw3.h": "c",
-        "structs.h": "c"
+        "structs.h": "c",
+        "button.h": "c",
+        "array": "cpp",
+        "chrono": "cpp",
+        "compare": "cpp",
+        "functional": "cpp",
+        "ratio": "cpp",
+        "tuple": "cpp",
+        "type_traits": "cpp",
+        "utility": "cpp",
+        "fileui.h": "c"
     }
 }

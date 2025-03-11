@@ -3,6 +3,7 @@
 static float lastX = 400, lastY = 300;
 static int firstMouse = 1;
 static Camera *activeCamera = NULL; // Track the active camera instance
+float GlobalScale = 1;
 
 int WIDTH = 800;
 int HEIGHT = 600;
@@ -43,6 +44,25 @@ void camera_process_input(Camera *camera, GLFWwindow *window, float deltaTime) {
     if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
         glm_vec3_scale(camera->right, velocity, movement);
         glm_vec3_add(camera->position, movement, camera->position);
+    }
+
+    if(glfwGetKey(window, GLFW_KEY_UP))
+    {
+        GlobalScale += deltaTime;
+    }
+    if(glfwGetKey(window, GLFW_KEY_DOWN))
+    {
+        GlobalScale -= deltaTime;
+    }
+
+    if(GlobalScale < 0.5f)
+    {
+        GlobalScale = 0.5f;
+    }
+
+    if(GlobalScale > 5.0f)
+    {
+        GlobalScale = 5.0f;
     }
 
     if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS) {
@@ -102,6 +122,9 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
 }
 
 void mouse_callback(GLFWwindow* window, double xpos, double ypos) {
+    activeCamera->MousePos[0] = xpos;
+    activeCamera->MousePos[1] = ypos;
+
     if (activeCamera != NULL) {
         camera_process_mouse(activeCamera, xpos, ypos);
     }

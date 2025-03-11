@@ -2,7 +2,9 @@
 #include <GLFW/glfw3.h>
 #include <stdio.h>   
 #include <stdlib.h> 
- 
+
+#include "UI/FileUI.h" 
+
 #include "structs.h"
 #include "drawing.h"
 #include "main.h"
@@ -35,6 +37,7 @@ int main() {
     glfwMakeContextCurrent(window);
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
     glfwSetCursorPosCallback(window, mouse_callback);
+    glfwSetWindowSizeLimits(window, 800, 600, GLFW_DONT_CARE, GLFW_DONT_CARE);
 
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
         fprintf(stderr, "Failed to initialize GLAD\n");
@@ -44,11 +47,14 @@ int main() {
     vec3 startPos = {0.0f, 0.0f, 3.0f};
     camera_init(&camera, startPos);
 
+    ConstructFileUI();
+
     float deltaTime = 0.0f;
     float lastFrame = 0.0f;
 
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_BLEND);
+    glEnable(GL_TEXTURE_2D);
     glBlendFunc(GL_SRC_ALPHA, GL_SRC_ALPHA);
 
     // Main loop
@@ -67,6 +73,7 @@ int main() {
         // Bottom-left quadrant
         glViewport(0, 0, WIDTH / 2, HEIGHT / 2);
         // Render other content if needed
+        RenderFileUI();
         
         // Top-right quadrant
         glViewport(WIDTH / 2, HEIGHT / 2, WIDTH / 2, HEIGHT / 2);
@@ -82,6 +89,8 @@ int main() {
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
+
+    DestroyFileUI();
 
     // Cleanup
     glfwDestroyWindow(window);

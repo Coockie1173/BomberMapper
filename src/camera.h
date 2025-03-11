@@ -18,10 +18,12 @@ typedef struct {
 
     int mouseCaptured; // Flag to track right-click hold state
     mat4 view, projection; 
+    vec2 MousePos;
 } Camera;
 
 extern int WIDTH;
 extern int HEIGHT;
+extern float GlobalScale;
 
 void camera_init(Camera *camera, vec3 position);
 void camera_process_input(Camera *camera, GLFWwindow *window, float deltaTime);

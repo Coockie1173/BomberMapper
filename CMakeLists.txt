@@ -46,7 +46,6 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(cglm)
 
-
 # Add all source files from src directory
 file(GLOB_RECURSE SRC_FILES src/*.c)
 
@@ -69,4 +68,10 @@ target_link_libraries(${PROJECT_NAME}
     glfw
     OpenGL::GL
     OpenGL::GLU
+)
+
+# Copy Resources folder after build
+add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+    ${CMAKE_SOURCE_DIR}/Resources $<TARGET_FILE_DIR:${PROJECT_NAME}>/Resources
 )
