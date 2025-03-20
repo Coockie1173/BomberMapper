@@ -5,6 +5,7 @@
 #include "../camera.h"
 #include "FileUI.h"
 #include <nfd.h>
+#include "../Tiles/World.h"
 #define BUTTONCOUNT 1
 
 struct Button** UIButtons;
@@ -18,8 +19,9 @@ void OpenLayerFile()
     args.filterCount = 1;
 
     nfdresult_t result = NFD_OpenDialogU8_With(&outPath, &args);
-    if (result == NFD_OKAY)
+    if (result == outPath)
     {
+        LoadBin((char*)result);
 
         NFD_FreePathU8(outPath);
     }
@@ -43,6 +45,8 @@ void ConstructFileUI()
 
 void RenderFileUI()
 {
+    const int Offset = 4;
+
     glDisable(GL_BLEND); 
     glDisable(GL_DEPTH_TEST);
 
@@ -61,7 +65,7 @@ void RenderFileUI()
         glVertex2f(0.0f, HEIGHT); 
     glEnd();
 
-    float PosX = 0, PosY = 0;
+    float PosX = Offset, PosY = Offset;
     for(int i = 0; i < BUTTONCOUNT; i++)
     {
         UIButtons[i]->Position[0] = PosX;
@@ -69,7 +73,7 @@ void RenderFileUI()
         PosX += UIButtons[i]->Size[0];
         if(PosX > WIDTH / 2.5f)
         {
-            PosX = 0;
+            PosX = Offset;
             PosY += UIButtons[i]->Size[1];
         }
         RenderButton(UIButtons[i]);
