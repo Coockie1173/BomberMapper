@@ -19,10 +19,14 @@ void OpenLayerFile()
     args.filterCount = 1;
 
     nfdresult_t result = NFD_OpenDialogU8_With(&outPath, &args);
-    if (result == outPath)
+    if (result == NFD_OKAY)
     {
-        LoadBin((char*)result);
-
+        if(LoadedLayerFile != NULL)
+        {
+            UnloadMap(LoadedLayerFile);
+        }
+        LoadedLayerFile = malloc(sizeof(Layerfile));
+        LoadBin((char*)outPath, &LoadedLayerFile);
         NFD_FreePathU8(outPath);
     }
 }

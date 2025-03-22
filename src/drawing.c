@@ -1,4 +1,5 @@
 #include "drawing.h"
+#include "Tiles/World.h"
 #include "camera.h"
 
 void drawSquare(vec3 position, vec3 rotation, vec3 scale, vec3 col) 
@@ -49,18 +50,33 @@ void Render3DWorld(GLFWwindow *window, Camera* camera)
     //temp drawing thing+    
     
     glScalef(GlobalScale, GlobalScale, GlobalScale);
-    for (int y = 0; y < 10; y++)
+
+    float WorldZ = 0;
+
+    if(LoadedLayerFile != NULL)
     {
-        for (int x = 0; x < 10; x++)
+        for(int SectionID = 0; SectionID < LoadedLayerFile->SectionCount; SectionID++)
         {
-            for (int z = -3; z < 1; z++)
+            for(int SubsectionID = 0; SubsectionID < LoadedLayerFile->Sections[SectionID]->AmmSubsections; SubsectionID++)
             {
-                vec3 Pos = {x, z, y};
-                vec3 rot = {0.0f, 0.0f, 0.0f};
-                vec3 scale = {1.0f, 1.0f, 1.0f};
-                vec3 Col = {(float)x / 10, 0, (float)y / 10};
-                drawSquare(Pos, rot, scale, Col);
+                for(int y = 0; y < 8; y++)
+                {
+                    for(int x = 0; x < 8; x++)
+                    {
+                        if((LoadedLayerFile->Sections[SectionID]->SubSections[SubsectionID]->Data[x + (y * 8)] & 0b00001111) == 0)
+                        {
+                            continue;
+                        }
+                        float DrawX = x + (LoadedLayerFile->Sections[SectionID]->SubSections[SubsectionID]->HeaderbyteOne * 8);
+                        float DrawY = y + (LoadedLayerFile->Sections[SectionID]->SubSections[SubsectionID]->HeaderbyteTwo * 8);
+                        vec3 WorldPos = {DrawX, WorldZ, DrawY};
+                        vec3 Rot = {0};
+                        vec3 Scale = {1,1,1};
+                        drawSquare(WorldPos, Rot, Scale, TileColours[LoadedLayerFile->Sections[SectionID]->SubSections[SubsectionID]->Data[x + (y * 8)] & 0b00001111]);
+                    }
+                }
             }
+            WorldZ += LoadedLayerFile->Sections[SectionID]->HeightOffset;
         }
     }
     

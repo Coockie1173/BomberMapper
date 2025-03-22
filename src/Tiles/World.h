@@ -1,7 +1,20 @@
 #ifndef _WORLD_H_
 #define _WORLD_H_
 
+#include <stdio.h>
+#include <stdlib.h>
 #include <stdint.h>
+#include <string.h>
+#include <cglm/cglm.h>
+#include <GLFW/glfw3.h>
+
+#ifdef _MSC_VER
+    #include <intrin.h>
+    #define bswap16 _byteswap_ushort
+#else
+    #define bswap16 __builtin_bswap16
+#endif
+
 #define SECTIONSIZE 8
 
 #define SECTION_HEADSIZE 0x2
@@ -30,40 +43,35 @@ enum CollisionType
     WALL
 };
 
-struct Tile
-{
-    uint8_t Byte1;
-    uint8_t Byte2;
-};
+extern const vec3 TileColours[];
 
-struct SubSection
-{
+typedef struct {
     uint8_t HeaderbyteOne;
     uint8_t HeaderbyteTwo;
-    struct Tile* Data;
-};
+    uint16_t* Data;
+} SubSection;
 
-struct Section
-{
-    struct SubSection* SubSections;
+typedef struct {
+    SubSection** SubSections;
     uint8_t AmmSubsections;
     uint8_t AmmPartsInSubsections;
     uint8_t HeightOffset;
     int SubsectionLength;
     int SubsectionOffset;
-};
+} Section;
 
-struct LayerFile
-{
-    uint32_t Header;
+typedef struct {
+    uint8_t SectionCount;
+    int Header;
     uint8_t DeathOffset;
-    struct Section* Sections;
-};
+    Section** Sections;
+} Layerfile;
+
 
 extern unsigned char MapLoaded;
-extern struct LayerFile* LoadedFile;
+extern Layerfile* LoadedLayerFile;
 
-void LoadBin(const char* FilePath);
-void UnloadMap();
+void LoadBin(const char* FilePath, Layerfile** LoadedFile);
+void UnloadMap(Layerfile* LoadedFile);
 
 #endif
