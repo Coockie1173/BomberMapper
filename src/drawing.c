@@ -15,10 +15,10 @@ void drawSquare(vec3 position, vec3 rotation, vec3 scale, vec3 col)
 
     // Draw the square
     glBegin(GL_QUADS);
-        glColor4f(col[0], col[1], col[2], 0.5f); glVertex3f(-0.5f, 0.0f, -0.5f);
-        glColor4f(col[0], col[1], col[2], 0.5f); glVertex3f( 0.5f, 0.0f, -0.5f);
-        glColor4f(col[0], col[1], col[2], 0.5f); glVertex3f( 0.5f, 0.0f,  0.5f);
-        glColor4f(col[0], col[1], col[2], 0.5f); glVertex3f(-0.5f, 0.0f,  0.5f);
+        glColor4f(col[0], col[1], col[2], 1); glVertex3f(-0.5f, 0.0f, -0.5f);
+        glColor4f(col[0], col[1], col[2], 1); glVertex3f( 0.5f, 0.0f, -0.5f);
+        glColor4f(col[0], col[1], col[2], 1); glVertex3f( 0.5f, 0.0f,  0.5f);
+        glColor4f(col[0], col[1], col[2], 1); glVertex3f(-0.5f, 0.0f,  0.5f);
     glEnd();
 
     glPopMatrix(); // Restore the previous matrix state

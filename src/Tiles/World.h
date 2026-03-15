@@ -71,7 +71,17 @@ typedef struct {
 extern unsigned char MapLoaded;
 extern Layerfile* LoadedLayerFile;
 
+typedef struct 
+{
+    vec3 Center;
+    float Height;
+} WallData;
+
+extern int WallDataSize;
+extern WallData* MapWallData;
+
 void LoadBin(const char* FilePath, Layerfile** LoadedFile);
 void UnloadMap(Layerfile* LoadedFile);
+void CalculateWalls(Layerfile* LoadedFile);
 
 #endif

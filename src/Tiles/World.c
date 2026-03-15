@@ -6,6 +6,8 @@
 
 unsigned char MapLoaded = 0;
 Layerfile* LoadedLayerFile;
+int WallDataSize = 0;
+WallData* MapWallData;
 
 uint32_t bswap32(uint32_t value) {
     return ((value >> 24) & 0x000000FF) |
@@ -162,4 +164,31 @@ void LoadBin(const char* FilePath, Layerfile** LoadedFile)
     }
     
     free(RawData);
+}
+
+void CalculateWalls(Layerfile* LoadedFile)
+{
+    if(MapWallData != NULL)
+    {
+        free(MapWallData);
+    }
+
+    MapWallData = malloc(0);
+
+    uint16_t*** OrderedData = malloc(sizeof(uint16_t**) * LoadedLayerFile->SectionCount);
+
+    for(int SectionID = 0; SectionID < LoadedLayerFile->SectionCount; SectionID++)
+    {
+        for(int SubsectionID = 0; SubsectionID < LoadedLayerFile->Sections[SectionID]->AmmSubsections; SubsectionID++)
+        {
+            for(int y = 0; y < 8; y++)
+            {
+                for(int x = 0; x < 8; x++)
+                {
+
+                }
+            }
+        }
+
+    }
 }
